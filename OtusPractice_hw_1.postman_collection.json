@@ -1,0 +1,149 @@
+{
+	"info": {
+		"_postman_id": "42d7302b-b8c4-45ac-bfe6-7fb09823cf01",
+		"name": "OtusPractice",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "1931114"
+	},
+	"item": [
+		{
+			"name": "https://localhost:5001/login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);\r",
+							"postman.setEnvironmentVariable(\"token\", jsonData.token);\r",
+							"\r",
+							"console.log(pm.environment.get(\"token\"));"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "accept",
+						"value": "text/plain"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"userLogin\": \"evsugin\",\r\n  \"userPassword\": \"test\"\r\n}"
+				},
+				"url": {
+					"raw": "https://localhost:5001/login",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"login"
+					]
+				},
+				"description": "login - получить JWT token"
+			},
+			"response": []
+		},
+		{
+			"name": "https://localhost:5001/user/get/123",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "accept",
+						"value": "text/plain"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}"
+					}
+				],
+				"url": {
+					"raw": "https://localhost:5001/user/get/3face2f2-f1ca-4777-a4a4-971ddf393c21",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"user",
+						"get",
+						"3face2f2-f1ca-4777-a4a4-971ddf393c21"
+					]
+				},
+				"description": "Get user by Id"
+			},
+			"response": []
+		},
+		{
+			"name": "https://localhost:5001/user/register",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "accept",
+						"value": "text/plain"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"firstName\": \"test1\",\r\n  \"secondName\": \"test11\",\r\n  \"login\": \"test1\",\r\n  \"password\": \"test1\"\r\n}"
+				},
+				"url": {
+					"raw": "https://localhost:5001/user/register",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "5001",
+					"path": [
+						"user",
+						"register"
+					]
+				},
+				"description": "Create new user"
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "token",
+			"value": "",
+			"type": "string"
+		}
+	]
+}
