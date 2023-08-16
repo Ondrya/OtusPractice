@@ -1,19 +1,59 @@
 ﻿using Bogus;
+using Bogus.DataSets;
+using Newtonsoft.Json;
+using OtusPractice.Domain.Models;
+using OtusPractice.WebApiCore.Models;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using static Bogus.DataSets.Name;
 
 namespace OtusPractice.WebApiCore.Services
 {
     public class Generator
     {
         private readonly Faker _faker;
+        private readonly string _locale = "ru";
 
 
         public Generator()
         {
-            _faker = new Faker();
+            _faker = new Faker(_locale);
         }
 
         public string Password() => _faker.Internet.Password();
         public string Login() => _faker.Internet.UserName();
+
+
+        /// <summary>
+        /// Сгенерировать пакет тестовых пользователей
+        /// </summary>
+        /// <param name="count"></param>
+        /// <returns></returns>
+        public async Task<List<User>> CreateUsers(int count)
+        {
+            var testUsers = new Faker<User>(_locale)
+
+                .RuleFor(u => u.Sex, f => (int)f.PickRandom<Gender>())
+                //.RuleFor(u => u.Id, f => Guid.NewGuid().ToString())
+                .RuleFor(u => u.FirstName, (f, u) => f.Name.FirstName((Gender)u.Sex))
+                .RuleFor(u => u.SecondName, (f, u) => f.Name.LastName((Gender)u.Sex))
+                .RuleFor(u => u.Login, (f, u) => f.Internet.UserName())   //f.Internet.Email(u.FirstName, u.SecondName))
+                .RuleFor(u => u.Password, (f, u) => f.Internet.Password())
+                .RuleFor(u => u.City, (f) => f.Address.City())
+
+                .FinishWith((f, u) =>
+                {
+                    //Console.WriteLine($"{u.Id} User {u.Login} => {u.FirstName} {u.SecondName} created Credentials: {u.Login} {u.Password}");
+
+                    Console.WriteLine(JsonConvert.SerializeObject(u, Formatting.Indented));
+                });
+
+            var users = testUsers.Generate(count);
+
+
+            return users;
+        }
 
 
         //var testUsers = new Faker<User>()
